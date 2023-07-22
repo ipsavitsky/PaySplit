@@ -10,13 +10,13 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
     // execTransaction(address,uint256,bytes,uint8,uint256,uint256,uint256,address,address,bytes)
     // https://www.4byte.directory/signatures/?bytes4_signature=0x6a761202
-    const relayMethod = "0x6a761202"
+    const splitPayMethod = "0x6a761202"
     // We don't use a trusted origin right now to make it easier to test.
     // For production networks it is strongly recommended to set one to avoid potential fee extraction.
     const trustedOrigin = ZeroAddress // hre.network.name === "hardhat" ? ZeroAddress : getGelatoAddress(hre.network.name)
-    await deploy("RelayPlugin", {
+    await deploy("SplitPayPlugin", {
         from: deployer,
-        args: [trustedOrigin, relayMethod],
+        args: [trustedOrigin, splitPayMethod],
         log: true,
         deterministicDeployment: true,
     });
