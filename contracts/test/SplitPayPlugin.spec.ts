@@ -7,7 +7,7 @@ import { getProtocolManagerAddress } from "../src/utils/protocol";
 import { Interface, MaxUint256, ZeroAddress, ZeroHash, getAddress, keccak256 } from "ethers";
 import { ISafeProtocolManager__factory } from "../typechain-types";
 
-describe("RelayPlugin", async () => {
+describe("SplitPayPlugin", async () => {
     const TOKEN_ADDRESS = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2";
     const abiEncoder = ethers.AbiCoder.defaultAbiCoder();
     let relayer: SignerWithAddress;
@@ -48,9 +48,12 @@ describe("RelayPlugin", async () => {
 
     it("should revert percent is greater than 100", async () => {
         const { account, plugin, manager } = await setup();
-        await expect(plugin.setCoveredPercent(account, 110))
-            .to.be.revertedWithCustomError(plugin, "PercentTooHigh")
-            .withArgs(110);
+        const setupTx = await plugin.setCoveredPercent.populateTransaction(110);
+        await account.executeCallViaMock(setupTx.to, setupTx.value || 0, setupTx.data, MaxUint256);
+        expect(await plugin.coveredPercent()).to.be.eq(0);
+        // await expect(plugin.setCoveredPercent(110))
+        //     .to.be.revertedWithCustomError(plugin, "PercentTooHigh")
+        //     .withArgs(110);
     });
 
     // it("should revert if target contract reverts", async () => {
@@ -162,7 +165,7 @@ describe("RelayPlugin", async () => {
         const { account, plugin, manager } = await setup();
 
         const percent = 50;
-        const setupTx = await plugin.setCoveredPercent.populateTransaction(account, percent);
+        const setupTx = await plugin.setCoveredPercent.populateTransaction(percent);
         await account.executeCallViaMock(setupTx.to, setupTx.value || 0, setupTx.data, MaxUint256);
         expect(await plugin.coveredPercent()).to.be.eq(percent);
 

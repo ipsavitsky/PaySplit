@@ -46,13 +46,18 @@ contract SplitPayPlugin is BasePluginWithEventMetadata {
 
     }
 
-    function setCoveredPercent(SafeAccount safe, uint256 newCoveredPercent) external requireSafeUser(safe) {
-        if (msg.sender == trustedOrigin) revert UntrustedOrigin(msg.sender);
+    function setCoveredPercent(uint256 newCoveredPercent) external requirePluginMaster(msg.sender) {
         if (newCoveredPercent > 100) {
             revert PercentTooHigh(newCoveredPercent);
         }
+        console.log(newCoveredPercent);
         coveredPercent = newCoveredPercent;
         emit CoveredPercentUpdated(coveredPercent);
+    }
+
+    function drain(address payable safe) external requirePluginMaster(msg.sender) {
+        bool sent = safe.send(address(this).balance);
+        require(sent, "Drain has not succeeded");
     }
 
     function executeFromPlugin(ISafeProtocolManager manager, SafeAccount safe, address where, uint256 amount) external payable requirePercentPayment(amount) requireSafeUser(safe) {
@@ -75,6 +80,12 @@ contract SplitPayPlugin is BasePluginWithEventMetadata {
 
     modifier requireSafeUser(SafeAccount safe) {
         require(safe.isOwner(msg.sender), "Ownable: You are not the safe owner, Bye.");
+        _;
+    }
+
+    modifier requirePluginMaster(address safe) {
+        console.log(safe);
+        require(msg.sender == trustedOrigin, "You are not master, Bye.");
         _;
     }
 }
