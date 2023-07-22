@@ -1,15 +1,11 @@
 import { FunctionComponent, useCallback, useEffect, useState } from "react";
-import { formatUnits, isAddress, parseUnits } from "ethers"
 import { useParams } from "react-router-dom";
 import "./Relay.css";
-import { CircularProgress, FormControl, InputLabel, Select, MenuItem, TextField, Button, Typography, Card } from '@mui/material';
+import { CircularProgress, Card } from '@mui/material';
 import { setCoveredContractPercent, getCoveredContractPercent, pay_EOA_part, isKnownSamplePlugin } from "../../../logic/sample";
 import { getSafeInfo, isConnectedToSafe, submitTxs } from "../../../logic/safeapp";
 import { SafeInfo } from '@safe-global/safe-apps-sdk';
-import { NextTxsList } from "./NextTxs";
-import { SafeMultisigTransaction } from "../../../logic/services";
-import { RelayDialog } from "./RelayDialog";
-import { Percent } from "@mui/icons-material";
+
 // import { assert } from "console";
 
 // this is the worst thing ever???
