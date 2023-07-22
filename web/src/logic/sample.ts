@@ -1,10 +1,9 @@
-import { ethers, getAddress, ZeroAddress } from "ethers"
+import { ethers, getAddress } from "ethers"
 import { getProvider } from "./web3";
-import { GelatoRelay } from "@gelatonetwork/relay-sdk"
-import { getSafeInfo, submitTxs } from "./safeapp";
-import { getManager } from "./protocol";
-import { getCurrentNonce } from "./safe";
+import { submitTxs } from "./safeapp";
 import { getSafeMultisigTxs, SafeMultisigTransaction } from "./services";
+import { getCurrentNonce } from "./safe";
+
 import cont from "./abi.json"
 
 const SAMPLE_PLUGIN_CHAIN_ID = 5
@@ -36,6 +35,12 @@ export const setCoveredContractPercent = async (percent: number) => {
     } catch (e) {
         console.error(e)
     }
+}
+
+export const getNextTxs = async(safe: string): Promise<SafeMultisigTransaction[]> => {
+    const currentNonce = await getCurrentNonce(safe)
+    const { results: txs } = await getSafeMultisigTxs(safe, { nonce: currentNonce })
+    return txs
 }
 
 export const getCoveredContractPercent = async (): Promise<number> => {

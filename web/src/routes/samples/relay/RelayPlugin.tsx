@@ -2,7 +2,7 @@ import { FunctionComponent, useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "./Relay.css";
 import { CircularProgress, Card } from '@mui/material';
-import { setCoveredContractPercent, getCoveredContractPercent, pay_EOA_part, isKnownSamplePlugin } from "../../../logic/sample";
+import { setCoveredContractPercent, getCoveredContractPercent, isKnownSamplePlugin } from "../../../logic/sample";
 import { getSafeInfo, isConnectedToSafe, submitTxs } from "../../../logic/safeapp";
 import { SafeInfo } from '@safe-global/safe-apps-sdk';
 
