@@ -55,6 +55,7 @@
     ]
   },
   "devDependencies": {
+    "@types/big.js": "^6.1.6",
     "gh-pages": "^5.0.0"
   }
 }

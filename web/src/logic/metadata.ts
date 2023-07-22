@@ -78,7 +78,7 @@ export const decodePluginMetadata = (data: string, pluginAddress?: string): Plug
 };
 
 export const loadPluginMetadata = async (plugin: Contract): Promise<PluginMetadata> => {
-    console.log({plugin})
+    console.log({ plugin })
     const metadataHash = await plugin.metadataHash();
     const metadata = await loadRawMetadata(plugin, metadataHash);
     if (metadataHash !== keccak256(metadata)) throw Error("Invalid metadata retrieved!");

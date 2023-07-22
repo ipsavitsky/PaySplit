@@ -11,7 +11,7 @@ const SAFE_ABI = [
 ]
 
 // TODO: use safe-core-sdk here once Ethers v6 is supported
-const getSafe = async(address: string) => {
+const getSafe = async (address: string) => {
     const provider = await getProvider()
     return new ethers.Contract(
         address,
@@ -20,24 +20,24 @@ const getSafe = async(address: string) => {
     )
 }
 
-export const isModuleEnabled = async(safeAddress: string, module: string): Promise<boolean> => {
+export const isModuleEnabled = async (safeAddress: string, module: string): Promise<boolean> => {
     const safe = await getSafe(safeAddress)
     return await safe.isModuleEnabled(module)
-} 
+}
 
-export const getCurrentNonce = async(safeAddress: string): Promise<BigNumberish> => {
+export const getCurrentNonce = async (safeAddress: string): Promise<BigNumberish> => {
     const safe = await getSafe(safeAddress)
     return await safe.nonce()
-} 
+}
 
-export const buildEnableModule = async(safeAddress: string, module: string): Promise<BaseTransaction> => {
+export const buildEnableModule = async (safeAddress: string, module: string): Promise<BaseTransaction> => {
     const safe = await getSafe(safeAddress)
     return {
         to: safeAddress,
         value: "0",
         data: (await safe.enableModule.populateTransaction(module)).data
     }
-} 
+}
 
 export const buildSignatureBytes = (signatures: SafeMultisigConfirmation[]): string => {
     const SIGNATURE_LENGTH_BYTES = 65;
@@ -93,7 +93,7 @@ const getExecuteTxData = async (
     )).data;
 };
 
-export const buildExecuteTx = async (tx: SafeMultisigTransaction): Promise<{to: string, data: string}> => {
+export const buildExecuteTx = async (tx: SafeMultisigTransaction): Promise<{ to: string, data: string }> => {
     return {
         to: getAddress(tx.safe),
         data: await getExecuteTxData(tx)

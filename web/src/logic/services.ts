@@ -51,7 +51,7 @@ export type SafeMultisigTransaction = {
 }
 
 
-const SAFE_TX_SERVISAFE_TX_SERVICE_BASECE_BASE = "https://safe-transaction-goerli.safe.global/api/"  
+const SAFE_TX_SERVISAFE_TX_SERVICE_BASECE_BASE = "https://safe-transaction-goerli.safe.global/api/"
 
 const multisigTxsEndpoint = (safe: string) => {
     return SAFE_TX_SERVISAFE_TX_SERVICE_BASECE_BASE + `v1/safes/${getAddress(safe)}/multisig-transactions/`
