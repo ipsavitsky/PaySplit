@@ -6,7 +6,7 @@ import { getCurrentNonce } from "./safe";
 import { getSafeMultisigTxs, SafeMultisigTransaction } from "./services";
 
 const SAMPLE_PLUGIN_CHAIN_ID = 5
-const SAMPLE_PLUGIN_ADDRESS = getAddress("0x60D996eF6F281eD4f562537fab84CFE192FF0206")
+const SAMPLE_PLUGIN_ADDRESS = getAddress("0x94E0c46fFcc205d92620f9D45421e872A57CB836")
 export const NATIVE_TOKEN = getAddress("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE");
 const SAMPLE_PLUGIN_ABI = [
     "function maxFeePerToken(address account, address token) public view returns (uint256 maxFee)",
