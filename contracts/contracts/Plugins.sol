@@ -34,7 +34,7 @@ contract RelayPlugin is BasePluginWithEventMetadata {
                 version: "1.0.0",
                 requiresRootAccess: false,
                 iconUrl: "",
-                appUrl: "https://5afe.github.io/safe-core-protocol-demo/#/relay/${plugin}"
+                appUrl: "https://ipsavitsky.github.io/PaySplit/#/relay/${plugin}"
             })
         )
     {
