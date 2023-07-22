@@ -20,15 +20,7 @@ function multiplyBigIntByFloat(bigintNum: bigint, floatNum: number): number {
 
 export const RelayPlugin: FunctionComponent<{}> = () => {
     const { pluginAddress } = useParams();
-    // const [newMaxFee, setNewMaxFee] = useState<string>("");
-    // const [txToRelay, setTxToRelay] = useState<SafeMultisigTransaction | undefined>(undefined);
     const [safeInfo, setSafeInfo] = useState<SafeInfo | undefined>(undefined)
-    // const [feeTokens, setFeeTokens] = useState<string[]>([])
-    // const [maxFee, setMaxFee] = useState<bigint | undefined>(undefined)
-    // const [selectedFeeToken, setSelectedFeeToken] = useState<string | undefined>(undefined)
-    // const [selectedFeeTokenInfo, setSelectedFeeTokenInfo] = useState<TokenInfo | undefined>(undefined)
-    const [destinationAddress, setDestinationAddress] = useState<string>("");
-    const [txAmount, setTxAmount] = useState<string>("");
     const [prepaidAmount, setPrepaidAmount] = useState<number>(0.0);
     const [coveredPercentage, setCoveredPercentage] = useState<number | null>(null);
     console.log({ pluginAddress })
@@ -46,53 +38,34 @@ export const RelayPlugin: FunctionComponent<{}> = () => {
         fetchData();
     }, [pluginAddress]);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setCoveredPercentage(await getCoveredContractPercent())
+            } catch (e) {
+                console.error(e)
+            }
+        }
+        fetchData()
+    }, [])
+
     const setPercentHandle = useCallback(async (part: number) => {
         await setCoveredContractPercent(part);
     }, []);
 
-    const getPercentHandle = useCallback(async () => {
-        const resp = await getCoveredContractPercent();
-        console.log(`${Number(resp)}`)
-        setCoveredPercentage(Number(resp))
-    }, []);
-
-    const executePayment = useCallback(async () => {
-        if(!isAddress(destinationAddress)) return
-        await pay_EOA_part(destinationAddress, parseUnits(txAmount, "wei"), coveredPercentage);
-    }, [destinationAddress, txAmount, coveredPercentage]);
-
     const isLoading = safeInfo === undefined;
 
     return (
-        <div className="Sample">
+        <div className="Sample centered">
             <Card className="Settings">
                 {isLoading && <CircularProgress />}
                 {safeInfo !== undefined && <>
                     <div>
-                        <div>
-                            <Typography variant="body1">Address:</Typography>
-                            <TextField label={`address`} value={destinationAddress} onChange={(event) => setDestinationAddress(event.target.value)} />
-                        </div>
-                        <div>
-                            <Typography variant="body1">Amount:</Typography>
-                            <TextField label={`amount`} value={txAmount} onChange={(event) => setTxAmount(event.target.value)} />
-                        </div>
-                        <button onClick={() => getPercentHandle()}>Get covered percentage</button>
-
-                        {coveredPercentage !== null && <>
-                            <div>
-                                Safe wallet covered {coveredPercentage}% of your transaction. <br />
-                                <button onClick={() => executePayment()}>Send funds</button>
-                            </div>
-                        </>}<br />
-
-
-                        <div>
-                            <input type="range" min="0" max="100" value={prepaidAmount} onChange={(event) => setPrepaidAmount(parseInt(event.target.value, 10))} /> <br />
-                            You will pay {prepaidAmount}% of the transaction.
-                        </div>
-                        <button onClick={() => setPercentHandle(prepaidAmount)}>Set prepaid amount</button>
-                    </div>
+                        Current split allowance is {coveredPercentage}% <br/> 
+                        <input type="range" min="0" max="100" defaultValue={coveredPercentage!} value={prepaidAmount} onChange={(event) => setPrepaidAmount(parseInt(event.target.value, 10))} /> <br />
+                        {prepaidAmount}% of the transaction will be paid from the Safe Wallet.
+                    </div> <br />
+                    <button className="button-18" onClick={() => setPercentHandle(prepaidAmount)}>Set prepaid amount</button>
                 </>}
             </Card>
         </div>
