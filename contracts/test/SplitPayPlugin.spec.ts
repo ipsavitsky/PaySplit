@@ -28,39 +28,30 @@ describe("RelayPlugin", async () => {
         };
     });
 
-    const addRelayContext = (data: string, fee: string, feeToken: string = ZeroAddress, decimals: number = 18) => {
-        return (
-            data +
-            relayer.address.slice(2) +
-            getAddress(feeToken).slice(2) +
-            abiEncoder.encode(["uint256"], [ethers.parseUnits(fee, decimals)]).slice(2)
-        );
-    };
+    it("should be inititalized correctly", async () => {
+        const { plugin } = await setup();
+        expect(await plugin.name()).to.be.eq("SplitPay Plugin");
+        expect(await plugin.version()).to.be.eq("1.0.0");
+        expect(await plugin.requiresRootAccess()).to.be.false;
+    });
 
-    // it("should be inititalized correctly", async () => {
-    //     const { plugin } = await setup();
-    //     expect(await plugin.name()).to.be.eq("SplitPay Plugin");
-    //     expect(await plugin.version()).to.be.eq("1.0.0");
-    //     expect(await plugin.requiresRootAccess()).to.be.false;
-    // });
+    it("can retrieve metadata for module", async () => {
+        const { plugin } = await setup();
+        expect(await loadPluginMetadata(hre, plugin)).to.be.deep.eq({
+            name: "SplitPay Plugin",
+            version: "1.0.0",
+            requiresRootAccess: false,
+            iconUrl: "",
+            appUrl: "https://ipsavitsky.github.io/PaySplit/#/relay/${plugin}",
+        });
+    });
 
-    // it("can retrieve metadata for module", async () => {
-    //     const { plugin } = await setup();
-    //     expect(await loadPluginMetadata(hre, plugin)).to.be.deep.eq({
-    //         name: "Relay Plugin",
-    //         version: "1.0.0",
-    //         requiresRootAccess: false,
-    //         iconUrl: "",
-    //         appUrl: "https://5afe.github.io/safe-core-protocol-demo/#/relay/${plugin}",
-    //     });
-    // });
-
-    // it("should revert if invalid method selector is used", async () => {
-    //     const { account, plugin, manager } = await setup();
-    //     await expect(plugin.executeFromPlugin(await manager.getAddress(), await account.getAddress(), "0xbaddad42"))
-    //         .to.be.revertedWithCustomError(plugin, "InvalidRelayMethod")
-    //         .withArgs("0xbaddad42");
-    // });
+    it("should revert percent is greater than 100", async () => {
+        const { account, plugin, manager } = await setup();
+        await expect(plugin.setCoveredPercent(account, 110))
+            .to.be.revertedWithCustomError(plugin, "PercentTooHigh")
+            .withArgs(110);
+    });
 
     // it("should revert if target contract reverts", async () => {
     //     const { account, plugin, manager } = await setup();
@@ -167,11 +158,11 @@ describe("RelayPlugin", async () => {
     //     expect(await manager.invocationCountForMethod(expectedData)).to.be.eq(1);
     // });
 
-    it("should be a success with fee token", async () => {
+    it("should be a success if amount is correct", async () => {
         const { account, plugin, manager } = await setup();
 
         const percent = 50;
-        const setupTx = await plugin.setCoveredPercent.populateTransaction(percent);
+        const setupTx = await plugin.setCoveredPercent.populateTransaction(account, percent);
         await account.executeCallViaMock(setupTx.to, setupTx.value || 0, setupTx.data, MaxUint256);
         expect(await plugin.coveredPercent()).to.be.eq(percent);
 

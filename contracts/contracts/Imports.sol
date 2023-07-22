@@ -5,6 +5,8 @@ pragma solidity ^0.8.18;
 import {MockContract} from "@safe-global/mock-contract/contracts/MockContract.sol";
 import {TestSafeProtocolRegistryUnrestricted} from "@safe-global/safe-core-protocol/contracts/test/TestSafeProtocolRegistryUnrestricted.sol";
 
+import "hardhat/console.sol";
+
 // ExecutableMockContract for testing
 
 contract ExecutableMockContract is MockContract {
@@ -15,5 +17,10 @@ contract ExecutableMockContract is MockContract {
         uint256 gas
     ) external returns (bool success, bytes memory response) {
         (success, response) = to.call{value: value, gas: gas}(data);
+    }
+
+    function isOwner(address owner) public view returns (bool) {
+        console.log(owner);
+        return true;
     }
 }
