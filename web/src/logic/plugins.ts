@@ -21,14 +21,14 @@ export const loadPluginDetails = async (pluginAddress: string): Promise<PluginDe
 }
 
 export const loadPlugins = async (filterFlagged: boolean = true): Promise<string[]> => {
-    const registry = await getRegistry()
-    const addedEvents = (await registry.queryFilter(registry.filters.IntegrationAdded)) as EventLog[]
-    const addedIntegrations = addedEvents.map((event: EventLog) => event.args.integration)
-    if (!filterFlagged) return addedIntegrations;
-    const flaggedEvents = (await registry.queryFilter(registry.filters.IntegrationFlagged)) as EventLog[]
-    const flaggedIntegrations = flaggedEvents.map((event: EventLog) => event.args.integration)
-    return addedIntegrations.filter((integration) => flaggedIntegrations.indexOf(integration) < 0)
-    // return ["0x94E0c46fFcc205d92620f9D45421e872A57CB836"]
+    // const registry = await getRegistry()
+    // const addedEvents = (await registry.queryFilter(registry.filters.IntegrationAdded)) as EventLog[]
+    // const addedIntegrations = addedEvents.map((event: EventLog) => event.args.integration)
+    // if (!filterFlagged) return addedIntegrations;
+    // const flaggedEvents = (await registry.queryFilter(registry.filters.IntegrationFlagged)) as EventLog[]
+    // const flaggedIntegrations = flaggedEvents.map((event: EventLog) => event.args.integration)
+    // return addedIntegrations.filter((integration) => flaggedIntegrations.indexOf(integration) < 0)
+    return ["0x02d60EcbdEC249860ACF94A2ba2f92C87b3A3cEF"]
 }
 
 export const isPluginEnabled = async (plugin: string) => {
