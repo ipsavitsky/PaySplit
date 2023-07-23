@@ -12,25 +12,26 @@ export interface PluginDetails {
     enabled?: boolean
 }
 
-export const loadPluginDetails = async(pluginAddress: string): Promise<PluginDetails> => {
+export const loadPluginDetails = async (pluginAddress: string): Promise<PluginDetails> => {
     const plugin = await getPlugin(pluginAddress)
     const metadata = await loadPluginMetadata(plugin)
     if (!await isConnectedToSafe()) return { metadata }
     const enabled = await isPluginEnabled(pluginAddress)
-    return  { metadata, enabled }
+    return { metadata, enabled }
 }
 
-export const loadPlugins = async(filterFlagged: boolean = true): Promise<string[]> => {
-    const registry = await getRegistry()
-    const addedEvents = (await registry.queryFilter(registry.filters.IntegrationAdded)) as EventLog[]
-    const addedIntegrations = addedEvents.map((event: EventLog) => event.args.integration)
-    if (!filterFlagged) return addedIntegrations;
-    const flaggedEvents = (await registry.queryFilter(registry.filters.IntegrationFlagged)) as EventLog[]
-    const flaggedIntegrations = flaggedEvents.map((event: EventLog) => event.args.integration)
-    return addedIntegrations.filter((integration) => flaggedIntegrations.indexOf(integration) < 0)
+export const loadPlugins = async (filterFlagged: boolean = true): Promise<string[]> => {
+    // const registry = await getRegistry()
+    // const addedEvents = (await registry.queryFilter(registry.filters.IntegrationAdded)) as EventLog[]
+    // const addedIntegrations = addedEvents.map((event: EventLog) => event.args.integration)
+    // if (!filterFlagged) return addedIntegrations;
+    // const flaggedEvents = (await registry.queryFilter(registry.filters.IntegrationFlagged)) as EventLog[]
+    // const flaggedIntegrations = flaggedEvents.map((event: EventLog) => event.args.integration)
+    // return addedIntegrations.filter((integration) => flaggedIntegrations.indexOf(integration) < 0)
+    return ["0x02d60EcbdEC249860ACF94A2ba2f92C87b3A3cEF"]
 }
 
-export const isPluginEnabled = async(plugin: string) => {
+export const isPluginEnabled = async (plugin: string) => {
     if (!await isConnectedToSafe()) throw Error("Not connected to a Safe")
     const manager = await getManager()
     const safeInfo = await getSafeInfo()
@@ -38,7 +39,7 @@ export const isPluginEnabled = async(plugin: string) => {
     return pluginInfo.nextPluginPointer !== ZeroAddress
 }
 
-export const loadEnabledPlugins = async(): Promise<string[]> => {
+export const loadEnabledPlugins = async (): Promise<string[]> => {
     if (!await isConnectedToSafe()) throw Error("Not connected to a Safe")
     const manager = await getManager()
     const safeInfo = await getSafeInfo()
@@ -46,16 +47,16 @@ export const loadEnabledPlugins = async(): Promise<string[]> => {
     return paginatedPlugins.array
 }
 
-const buildEnablePlugin = async(plugin: string, requiresRootAccess: boolean): Promise<BaseTransaction> => {
+const buildEnablePlugin = async (plugin: string, requiresRootAccess: boolean): Promise<BaseTransaction> => {
     const manager = await getManager()
     return {
         to: await manager.getAddress(),
         value: "0",
         data: (await manager.enablePlugin.populateTransaction(plugin, requiresRootAccess)).data
     }
-} 
+}
 
-export const enablePlugin = async(plugin: string, requiresRootAccess: boolean) => {
+export const enablePlugin = async (plugin: string, requiresRootAccess: boolean) => {
     if (!await isConnectedToSafe()) throw Error("Not connected to a Safe")
     const manager = await getManager()
     const managerAddress = await manager.getAddress()
@@ -71,16 +72,16 @@ export const enablePlugin = async(plugin: string, requiresRootAccess: boolean) =
     await submitTxs(txs)
 }
 
-const buildDisablePlugin = async(pointer: string, plugin: string): Promise<BaseTransaction> => {
+const buildDisablePlugin = async (pointer: string, plugin: string): Promise<BaseTransaction> => {
     const manager = await getManager()
     return {
         to: await manager.getAddress(),
         value: "0",
         data: (await manager.disablePlugin.populateTransaction(pointer, plugin)).data
     }
-} 
+}
 
-export const disablePlugin = async(plugin: string) => {
+export const disablePlugin = async (plugin: string) => {
     if (!await isConnectedToSafe()) throw Error("Not connected to a Safe")
     const manager = await getManager()
     const txs: BaseTransaction[] = []

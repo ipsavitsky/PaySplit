@@ -11,7 +11,7 @@ const PLUGIN_ABI = [
     "function metadataProvider() external view returns (uint256 providerType, bytes location)"
 ]
 
-export const getManager = async() => {
+export const getManager = async () => {
     const provider = await getProvider()
     const registryInfo = protocolDeployments[5][0].contracts.TestSafeProtocolManager;
     return new ethers.Contract(
@@ -21,7 +21,7 @@ export const getManager = async() => {
     )
 }
 
-export const getRegistry = async() => {
+export const getRegistry = async () => {
     const provider = await getProvider()
     const registryInfo = protocolDeployments[5][0].contracts.TestSafeProtocolRegistryUnrestricted;
     return new ethers.Contract(
@@ -31,7 +31,7 @@ export const getRegistry = async() => {
     )
 }
 
-export const getPlugin = async(pluginAddress: string) => {
+export const getPlugin = async (pluginAddress: string) => {
     const provider = await getProvider()
     console.log(new Interface(PLUGIN_ABI))
     return new ethers.Contract(
@@ -41,7 +41,7 @@ export const getPlugin = async(pluginAddress: string) => {
     )
 }
 
-export const getMetadataProvider = async(providerAddress: string) => {
+export const getMetadataProvider = async (providerAddress: string) => {
     const provider = await getProvider()
     return new ethers.Contract(
         providerAddress,
