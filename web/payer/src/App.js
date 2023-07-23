@@ -138,8 +138,9 @@ function App() {
       <div>
         <div>
         <p>Covered percent: {percent}</p>
-        <button onClick={handleRefreshAmount}>Refresh percent</button>
+        <button className='button-35' onClick={handleRefreshAmount}>Refresh percent</button>
         </div>
+        <br/>
         <div>
           <label htmlFor="safeAddress">safeAddress:</label>
           <input
@@ -167,7 +168,8 @@ function App() {
             onChange={handleAmountChange}
           />
         </div>
-        <button onClick={handleButtonClick}>Submit</button>
+        <br/>
+        <button className="button-35" onClick={handleButtonClick}>Submit</button>
       </div>
     );
   }
