@@ -6,13 +6,15 @@ import {ISafe} from "@safe-global/safe-core-protocol/contracts/interfaces/Accoun
 import {ISafeProtocolManager} from "@safe-global/safe-core-protocol/contracts/interfaces/Manager.sol";
 import {SafeTransaction, SafeProtocolAction} from "@safe-global/safe-core-protocol/contracts/DataTypes.sol";
 
+import { AxelarExecutable } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/executable/AxelarExecutable.sol';
+
 import "hardhat/console.sol";
 
 interface SafeAccount is ISafe {
     function isOwner(address owner) external view returns (bool);
 }
 
-contract SplitPayPlugin is BasePluginWithEventMetadata {
+contract SplitPayPlugin is BasePluginWithEventMetadata, AxelarExecutable {
     event CoveredPercentUpdated(uint256 coveredPercent);
 
     error PercentTooHigh(uint256 coveredPercent);
@@ -28,6 +30,7 @@ contract SplitPayPlugin is BasePluginWithEventMetadata {
     uint256 public coveredPercent;
 
     constructor(
+        address gateway_,
         address _trustedOrigin
     )
         BasePluginWithEventMetadata(
@@ -39,6 +42,7 @@ contract SplitPayPlugin is BasePluginWithEventMetadata {
                 appUrl: "https://ipsavitsky.github.io/PaySplit/#/relay/${plugin}"
             })
         )
+        AxelarExecutable(gateway_)
     {
         trustedOrigin = _trustedOrigin;
 
@@ -62,6 +66,10 @@ contract SplitPayPlugin is BasePluginWithEventMetadata {
 
     function executeFromPlugin(ISafeProtocolManager manager, SafeAccount safe, address where, uint256 amount) external payable requirePercentPayment(amount) requireSafeUser(safe) {
         console.log(where);
+        delegatePay(manager, safe, where, amount);
+    }
+
+    function delegatePay(ISafeProtocolManager manager, SafeAccount safe, address where, uint256 amount) internal {
         SafeProtocolAction[] memory actions = new SafeProtocolAction[](1);
         actions[0].to = payable(where);
         actions[0].value = amount;
@@ -87,5 +95,16 @@ contract SplitPayPlugin is BasePluginWithEventMetadata {
         console.log(safe);
         require(msg.sender == trustedOrigin, "You are not master, Bye.");
         _;
+    }
+
+    // Handles calls created by setAndSend. Updates this contract's value
+    function _execute(
+        string calldata sourceChain_,
+        string calldata sourceAddress_,
+        bytes calldata payload_
+    ) internal override {
+        // Decodes the payload bytes into the string value and sets the state variable for this contract
+        (address manager, address safe, address toAddress, uint256 amount) = abi.decode(payload_, (address, address, address, uint256));
+        delegatePay(ISafeProtocolManager(manager), SafeAccount(safe), toAddress, amount);
     }
 }

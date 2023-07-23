@@ -61,7 +61,8 @@
     "ts-node": ">=8.0.0",
     "typechain": "^8.2.0",
     "typescript": "~5.0.0",
-    "yargs": "^17.7.2"
+    "yargs": "^17.7.2", 
+    "@axelar-network/axelar-gmp-sdk-solidity": "^3.3.0"
   },
   "files": [
     "contracts",
