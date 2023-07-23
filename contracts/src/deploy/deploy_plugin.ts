@@ -13,7 +13,7 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const trustedOrigin =  hre.network.name === "hardhat" ? "0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9" : "0xb011a210f04144B5866283D22e9A8616DAD87A92"
     await deploy("SplitPayPlugin", {
         from: deployer,
-        args: [trustedOrigin],
+        args: ["0xe432150cce91c13a887f7D836923d5597adD8E31", trustedOrigin],
         log: true,
         deterministicDeployment: true,
     });

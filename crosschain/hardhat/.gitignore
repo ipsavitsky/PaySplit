@@ -1,5 +1,4 @@
 node_modules
-build/
 .env
 coverage
 coverage.json
@@ -10,6 +9,3 @@ typechain-types
 cache
 artifacts
 
-deployments/
-
-.env.sample
