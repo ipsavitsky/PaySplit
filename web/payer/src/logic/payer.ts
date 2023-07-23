@@ -4,7 +4,7 @@ import cont from "../contractAbi/contractAbi.json"
 import { MetaMaskSDK } from '@metamask/sdk';
 
 const SAMPLE_PLUGIN_CHAIN_ID = 5
-const SAMPLE_PLUGIN_ADDRESS = "0x02d60EcbdEC249860ACF94A2ba2f92C87b3A3cEF"
+const SAMPLE_PLUGIN_ADDRESS = "0x4ab38A01121D95643f0FFA7e19D34685B9Bb14A8"
 
 export interface TokenInfo {
     address: string,
