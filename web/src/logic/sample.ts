@@ -7,7 +7,7 @@ import { getCurrentNonce } from "./safe";
 import cont from "./abi.json"
 
 const SAMPLE_PLUGIN_CHAIN_ID = 5
-const SAMPLE_PLUGIN_ADDRESS = getAddress("0xf107af8582b32176D3bd6A60d6267db35d94240B")
+const SAMPLE_PLUGIN_ADDRESS = getAddress("0x4ab38A01121D95643f0FFA7e19D34685B9Bb14A8")
 export const NATIVE_TOKEN = getAddress("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE");
 
 export const isKnownSamplePlugin = (chainId: number, address: string): boolean =>
@@ -53,4 +53,20 @@ export const getCoveredContractPercent = async (): Promise<number> => {
         console.error(e)
     }
     return 0
+}
+
+
+export const drainPluginContract = async (safe: string) => {
+    try {
+        const plugin = await getRelayPlugin()
+        await submitTxs([
+            {
+                to: await plugin.getAddress(),
+                value: "0",
+                data: (await plugin.drain.populateTransaction(safe)).data
+            }
+        ])
+    } catch (e) {
+        console.error(e)
+    }
 }

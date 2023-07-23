@@ -1,8 +1,8 @@
 import { FunctionComponent, useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "./Relay.css";
-import { CircularProgress, Card } from '@mui/material';
-import { setCoveredContractPercent, getCoveredContractPercent, isKnownSamplePlugin } from "../../../logic/sample";
+import { CircularProgress, Card, TextField } from '@mui/material';
+import { setCoveredContractPercent, getCoveredContractPercent, drainPluginContract, isKnownSamplePlugin } from "../../../logic/sample";
 import { getSafeInfo, isConnectedToSafe, submitTxs } from "../../../logic/safeapp";
 import { SafeInfo } from '@safe-global/safe-apps-sdk';
 
@@ -19,6 +19,8 @@ export const RelayPlugin: FunctionComponent<{}> = () => {
     const [safeInfo, setSafeInfo] = useState<SafeInfo | undefined>(undefined)
     const [prepaidAmount, setPrepaidAmount] = useState<number>(0.0);
     const [coveredPercentage, setCoveredPercentage] = useState<number | null>(null);
+    const [safeWalletAddress, setSafeWalletAddress] = useState<string | null>(null);
+
     console.log({ pluginAddress })
     useEffect(() => {
         const fetchData = async () => {
@@ -49,6 +51,14 @@ export const RelayPlugin: FunctionComponent<{}> = () => {
         await setCoveredContractPercent(part);
     }, []);
 
+    const drainAccount = useCallback(async (sw: string) => {
+        await drainPluginContract(sw);
+    }, [])
+
+    const setSafeWallet = useCallback(async (sw: string) => {
+        await setSafeWalletAddress(sw)
+    }, [])
+
     const isLoading = safeInfo === undefined;
 
     return (
@@ -57,11 +67,17 @@ export const RelayPlugin: FunctionComponent<{}> = () => {
                 {isLoading && <CircularProgress />}
                 {safeInfo !== undefined && <>
                     <div>
-                        Current split allowance is {coveredPercentage}% <br/> 
+                        Current split allowance is {coveredPercentage}% <br />
                         <input type="range" min="0" max="100" defaultValue={coveredPercentage!} value={prepaidAmount} onChange={(event) => setPrepaidAmount(parseInt(event.target.value, 10))} /> <br />
                         {prepaidAmount}% of the transaction will be paid from the Safe Wallet.
+
                     </div> <br />
-                    <button className="button-18" onClick={() => setPercentHandle(prepaidAmount)}>Set prepaid amount</button>
+                    <button className="button-18" onClick={() => setPercentHandle(prepaidAmount)}>Set prepaid amount</button> <br/>
+                    <hr/> <br/>
+                    <div>
+                        <TextField label={`SAFE{wallet} address`} value={safeWalletAddress} onChange={(event) => setSafeWallet(event.target.value)} />
+                    </div> <br />
+                    <button className="button-18" onClick={() => drainAccount(safeWalletAddress!)}>Drain</button>
                 </>}
             </Card>
         </div>
