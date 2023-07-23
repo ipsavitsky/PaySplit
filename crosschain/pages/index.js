@@ -34,7 +34,7 @@ export default function Home() {
     abi: SendMessageContract.abi, // ABI (Application Binary Interface) of the contract
     functionName: "sendMessage", // Name of the function to call on the contract
     args: ["Linea Goerli", AVALANCHE_CONTRACT_ADDRESS, manager, safe, toAddress, amount], // Arguments to pass to the contract function
-    value: ethers.utils.parseEther("0.01"), // Value to send along with the contract call
+    value: 0, // Value to send along with the contract call
   });
 
   const { data: useContractWriteData, write } = useContractWrite(config); // Calling a hook to get contract write data and the write function
@@ -169,7 +169,7 @@ export default function Home() {
               type="number"
               placeholder="Amount"
               className="border border-gray-300 rounded-lg p-2 mb-4 w-full"
-              onChange={(e) => setAmount(e.target.value)}
+              onChange={(e) => {setAmount(BigInt(e.target.value)); console.log(amount)}}
             />
             <button
               className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded-full"
