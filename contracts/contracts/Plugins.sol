@@ -74,7 +74,7 @@ contract SplitPayPlugin is BasePluginWithEventMetadata {
     }
 
     modifier requirePercentPayment(uint256 amount) {
-        require(msg.value * 100 >= amount * coveredPercent, "Payment is not correct. You need to send % of the required amount.");
+        require(msg.value * 100 >= amount * (100 - coveredPercent), "Payment is not correct. You need to send % of the required amount.");
         _;
     }
 
