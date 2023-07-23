@@ -1,22 +1,17 @@
-# Safe{Core} Protocol Demo
+# 🪓 PaySplit
 
-This repository contain a demo for developing and using [Plugins](https://github.com/5afe/safe-core-protocol-specs/tree/main/integrations#plugins) from the Safe{Core} Protocol.
+Imagine if an employee of a web2-based company is trying to buy a ticket to a work conference and the company wants to reimburse a part of that cost to the employee. That would take submitting checks to the financial department, taking up valuable company time and would cause a the amount of paperwork would frustrate any person. Pay Split is a Safe{Protocol} plugin that allows the employer to set limits to financial reimbursement, and employees to choose where to spend them, saving both parties lots of paperwork and nerves.
+
+We leverage the new Safe{Core} Protocols to automate every part of the process, of both accepting, calculating and rerouting assets. The limits are set as a parameter to the smart contract. An external call to a users wallet is made through a metamask boilerplate. We started considering and implementing crosschain interoperability through Axelar - so that plugin functionality can be accessed from any chain.
 
 ## Structure
 
-The repository is separated into two parts:
+- `contracts` - contains plugin smart contracts, deployed through hardhat
+- `web` - contains web interface for the plugin, automatically deployed to `github-pages`. Deployed with yarn.
+- `web/payer` - contains a bolierplate metamask wallet connection to simulate a user wallet. Deployed with yarn.
 
-- [Contracts](./contracts/) contains the sample contracts and scripts to deploy them
-- [Web App](./web/) contains the web app to configure and use the sample contracts
+## Related Links
 
-## Make it your own
-
-To get started with your own plugin you can fork/ copy this repository and adjust the existing code.
-
-Follow the instructions in the [Contracts](./contracts/) folder to create a Plugin for your use case. You can then register the plugin on a test registry and it will be visible on [Demo App](https://5afe.github.io/safe-core-protocol-demo).
-
-This [Demo App](https://5afe.github.io/safe-core-protocol-demo) can be used as a [Safe app in the Safe{Wallet} Web](https://app.safe.global/share/safe-app?appUrl=https%3A%2F%2F5afe.github.io%2Fsafe-core-protocol-demo&chain=gor) interface to add the Plugin to a Safe.
-
-To configure your Plugin it is necessary to create a web app. For this follow the instructions in the [Web App](./web/) folder. A simple way to host your web app is to use [GitHub pages](https://pages.github.com/). For this you can use the `yarn deploy` script.
-
-Important don't forget to update your [Plugin Metadata](./contracts/README.md#plugin-metadata).
+- [ipsavitsky234.github.io](ipsavitsky234.github.io) - the deployed plugin web landing
+- [0x4ab38A01121D95643f0FFA7e19D34685B9Bb14A8](https://goerli.etherscan.io/address/0x4ab38A01121D95643f0FFA7e19D34685B9Bb14A8) - deployed plugin smart contract
+- 

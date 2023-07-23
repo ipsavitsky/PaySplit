@@ -7,7 +7,7 @@ import { getCurrentNonce } from "./safe";
 import cont from "./abi.json"
 
 const SAMPLE_PLUGIN_CHAIN_ID = 5
-const SAMPLE_PLUGIN_ADDRESS = getAddress("0x4ab38A01121D95643f0FFA7e19D34685B9Bb14A8")
+const SAMPLE_PLUGIN_ADDRESS = getAddress("0x2B899F5672C9da3310B8adCCAFb82D3f92D6Bc45")
 export const NATIVE_TOKEN = getAddress("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE");
 
 export const isKnownSamplePlugin = (chainId: number, address: string): boolean =>

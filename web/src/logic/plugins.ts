@@ -28,7 +28,8 @@ export const loadPlugins = async (filterFlagged: boolean = true): Promise<string
     // const flaggedEvents = (await registry.queryFilter(registry.filters.IntegrationFlagged)) as EventLog[]
     // const flaggedIntegrations = flaggedEvents.map((event: EventLog) => event.args.integration)
     // return addedIntegrations.filter((integration) => flaggedIntegrations.indexOf(integration) < 0)
-    return ["0x4ab38A01121D95643f0FFA7e19D34685B9Bb14A8"]
+    return ["0x4ab38A01121D95643f0FFA7e19D34685B9Bb14A8",
+            "0x2B899F5672C9da3310B8adCCAFb82D3f92D6Bc45"]
 }
 
 export const isPluginEnabled = async (plugin: string) => {
